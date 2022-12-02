@@ -36,6 +36,12 @@ variable "sort_key_type" {
     }
 }
 
+variable "attributes" {
+    description = "(Optional) Set of nested attribute definitions."
+    type = list(map(string))
+    default = []
+}
+
 variable "billing_mode" {
     description = "Controls how you are charged for read and write throughput and how you manage capacity."
     type        = string
@@ -156,12 +162,11 @@ EOF
     default = []
 }
 
-variable "repilcas" {
+variable "replicas" {
     description = <<EOF
 The list of Replica configurations:
 region_name: (Required) Region name of the replica.
 point_in_time_recovery: (Optional) Flag to decide if Point in time recovery is enabled.
-propagate_tags: (Optional) Flag to decide if global table tags will be propagated to replica. 
 kms_key_arn: (Optional) ARN of the CMK that should be used for the AWS KMS encryption.
 EOF
     type = any

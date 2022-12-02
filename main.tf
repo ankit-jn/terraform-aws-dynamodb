@@ -20,6 +20,15 @@ resource aws_dynamodb_table "this" {
         }
     }
 
+    dynamic "attribute" {
+        for_each = var.attributes
+
+        content {
+            name = attribute.value.name
+            type = attribute.value.type
+        }
+    }
+
     billing_mode    = var.billing_mode
     read_capacity   = (var.billing_mode == "PROVISIONED") ? var.read_capacity : null
     write_capacity  = (var.billing_mode == "PROVISIONED") ? var.write_capacity : null
@@ -83,13 +92,12 @@ resource aws_dynamodb_table "this" {
         }
     }
 
-    dynamic "repilca" {
+    dynamic "replica" {
         for_each = var.replicas
 
         content {
             region_name = replica.value.region_name
             point_in_time_recovery = try(replica.value.point_in_time_recovery, false)
-            propagate_tags = try(replica.value.propagate_tags, false)
             kms_key_arn = try(replica.value.kms_key_arn, null)
         }
     }
@@ -106,7 +114,7 @@ resource aws_dynamodb_contributor_insights "this" {
 }
 
 resource aws_dynamodb_kinesis_streaming_destination "this" {
-    count = var.provision_contributor_insights ? 1 : 0
+    count = var.enable_kinesis_streaming_destination ? 1 : 0
 
     table_name = var.name
     stream_arn = var.kinesis_stream_arn

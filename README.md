@@ -36,6 +36,7 @@ Refer [Configuration Examples](https://github.com/arjstack/terraform-aws-example
 | <a name="partition_key_type"></a> [partition_key_type](#input\_partition\_key\_type) | Type of the Partition (Hash) key. | `string` | `"S"` | no |  |
 | <a name="sort_key_name"></a> [sort_key_name](#input\_sort\_key\_name) | Name of the Sort (Range) key. | `string` | `null` | no |  |
 | <a name="sort_key_type"></a> [sort_key_type](#input\_sort\_key\_type) | Type of the Sort (Range) key. | `string` | `"S"` | no |  |
+| <a name="attributes"></a> [attributes](#attribute) | Set of nested attribute definitions. | `list(map(string)` | `[]` | no |  |
 | <a name="billing_mode"></a> [billing_mode](#input\_billing\_mode) | Controls how you are charged for read and write throughput and how you manage capacity. | `string` | `"PROVISIONED"` | no |  |
 | <a name="read_capacity"></a> [read_capacity](#input\_read\_capacity) | Number of read units for this table. If the billing_mode is PROVISIONED, this field is required. | `number` | `null` | no |  |
 | <a name="write_capacity"></a> [write_capacity](#input\_write\_capacity) | Number of write units for this table. If the billing_mode is PROVISIONED, this field is required. | `number` | `null` | no |  |
@@ -51,12 +52,19 @@ Refer [Configuration Examples](https://github.com/arjstack/terraform-aws-example
 | <a name="kms_key"></a> [kms_key](#input\_kms\_key) | ARN of the CMK to be used for server side encryption if enabled. | `string` | `null` | no |  |
 | <a name="local_secondary_indexes"></a> [local_secondary_indexes](#local\_secondary\_index) | The list of Local Secondary Index (with the following configuration map for each index) on the table. | `list(map(string))` | `[]` | no |  |
 | <a name="global_secondary_indexes"></a> [global_secondary_indexes](#global\_secondary\_indexe) | The list of Global Secondary Index (with the following configuration map for each index) on the table. | `list(map(string))` | `[]` | no |  |
-| <a name="repilcas"></a> [repilcas](#repilca) | The list of Replica configurations | `any` | `[]` | no |  |
+| <a name="replicas"></a> [replicas](#replica) | The list of Replica configurations | `any` | `[]` | no |  |
 | <a name="provision_contributor_insights"></a> [provision_contributor_insights](#input\_provision\_contributor\_insights) | Flag to decide if provision a contributor insights resource. | `bool` | `false` | no |  |
 | <a name="enable_kinesis_streaming_destination"></a> [enable_kinesis_streaming_destination](#input\_enable\_kinesis\_streaming\_destination) | Flag to decide if enable a Kinesis streaming destination for data replication of a DynamoDB table. | `bool` | `false` | no |  |
 | <a name="kinesis_stream_arn"></a> [kinesis_stream_arn](#input\_kinesis\_stream\_arn) | The ARN for a Kinesis data stream. | `string` | `null` | no |  |
 
 ### Nested Configuration Maps:  
+
+#### attribute
+
+| Name | Description | Type | Default | Required |
+|:------|:------|:------|:------|:------:|
+| <a name="name"></a> [name](#input\_name) | Name of the attribute. | `string` |  | yes |
+| <a name="type"></a> [type](#input\_type) | Attribute type. Valid values are `S` (string), `N` (number), `B` (binary). | `string` |  | yes |
 
 #### local_secondary_index
 
@@ -79,13 +87,12 @@ Refer [Configuration Examples](https://github.com/arjstack/terraform-aws-example
 | <a name="projection_type"></a> [projection_type](#input\_projection\_type) | Projection type which defines the set of attributes that is copied from a table into a secondary index. | `string` | `"ALL"` | no |
 | <a name="non_key_attribuyes"></a> [non_key_attribuyes](#input\_non\_key\_attribuyes) | Comma separated non-key attributes name to be used in Index. | `string` |  | no |
 
-#### repilca
+#### replica
 
 | Name | Description | Type | Default | Required |
 |:------|:------|:------|:------|:------:|
 | <a name="region_name"></a> [region_name](#input\_region\_name) | Region name of the replica. | `string` |  | yes |
 | <a name="point_in_time_recovery"></a> [point_in_time_recovery](#input\_point\_in\_time\_recovery) | Flag to decide if Point in time recovery is enabled. | `bool` | `false` | no |
-| <a name="propagate_tags"></a> [propagate_tags](#input\_propagate\_tags) | Flag to decide if global table tags will be propagated to replica.  | `bool` | `false` | no |
 | <a name="kms_key_arn"></a> [kms_key_arn](#input\_kms\_key\_arn) | ARN of the CMK that should be used for the AWS KMS encryption. | `string` | `null` | no |
 
 ### Outputs
