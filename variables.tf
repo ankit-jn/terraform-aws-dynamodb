@@ -190,3 +190,54 @@ variable "kinesis_stream_arn" {
     type        = string
     default     = null
 }
+
+## AutoScaling Configurations
+
+variable "enable_autoscaling" {
+    description = "Flag to decide if Autoscaling should be enabled."
+    type        = bool
+    default     = false
+}
+
+variable "read_capacity_autoscaling" {
+    description = <<EOF
+The Configuration for Read capacity autoscaling:
+max_capacity: (Required) Number of maximum read units for this table.
+scale_in_cooldown: (Optional, defualt 50) Cooldown value for Scale-in event.
+scale_out_cooldown: (Optional, defualt 50) Cooldown value for Scale-out event.
+target_utilization: (Optional, defualt 70) Target utilization.
+EOF
+    type = map(number)
+    default  = {}
+
+}
+
+variable "write_capacity_autoscaling" {
+    description = <<EOF
+The Configuration for Write capacity autoscaling:
+max_capacity: (Required) Number of maximum write units for this table.
+scale_in_cooldown: (Optional, defualt 50) Cooldown value for Scale-in event
+scale_out_cooldown: (Optional, defualt 50) Cooldown value for Scale-out event
+target_utilization: (Optional, defualt 70) Target utilization
+EOF
+    type = map(number)
+    default  = {}
+
+}
+
+variable "gsi_capacity_autoscaling" {
+    description = <<EOF
+The Map of Configuration for Read/Write capacity autoscaling for Global Secondary Indexes:
+Map Key: Global Index Name
+Map Value: Nested Map of the configufuration:
+    min_read_capacity: (Required) Number of maximum read units for the Global Secondary Index.
+    max_read_capacity: (Required) Number of maximum read units for the Global Secondary Index.
+    min_write_capacity: (Required) Number of maximum write units for the Global Secondary Index.
+    max_write_capacity: (Required) Number of maximum write units for the Global Secondary Index.
+    scale_in_cooldown: (Optional, defualt 50) Cooldown value for Scale-in event
+    scale_out_cooldown: (Optional, defualt 50) Cooldown value for Scale-out event
+    target_utilization: (Optional, defualt 70) Target utilization
+EOF
+    type = map(map(number))
+    default  = {}
+}

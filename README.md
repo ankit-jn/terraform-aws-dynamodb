@@ -57,6 +57,15 @@ Refer [Configuration Examples](https://github.com/arjstack/terraform-aws-example
 | <a name="enable_kinesis_streaming_destination"></a> [enable_kinesis_streaming_destination](#input\_enable\_kinesis\_streaming\_destination) | Flag to decide if enable a Kinesis streaming destination for data replication of a DynamoDB table. | `bool` | `false` | no |  |
 | <a name="kinesis_stream_arn"></a> [kinesis_stream_arn](#input\_kinesis\_stream\_arn) | The ARN for a Kinesis data stream. | `string` | `null` | no |  |
 
+#### Inputs for AutoScaling
+
+| Name | Description | Type | Default | Required | Example|
+|:------|:------|:------|:------|:------:|:------|
+| <a name="enable_autoscaling"></a> [enable_autoscaling](#input\_enable\_autoscaling) | Flag to decide if Autoscaling should be enabled. | `bool` | `false` | no |  |
+| <a name="read_capacity_autoscaling"></a> [read_capacity_autoscaling](#capacity\_autoscaling) | The Configuration for Read capacity autoscaling. | `map(number)` | `{}` | no |  |
+| <a name="write_capacity_autoscaling"></a> [write_capacity_autoscaling](#capacity\_autoscaling) | The Configuration for Write capacity autoscaling. | `map(number)` | `{}` | no |  |
+| <a name="gsi_capacity_autoscaling"></a> [gsi_capacity_autoscaling](#gsi\_capacity\_autoscaling) | The Map of Configuration for Read/Write capacity autoscaling for Global Secondary Indexes where map key is the Index Name and Map value is a nested configuration map for autoscaling | `map(map(number))` | `{}` | no |  |
+
 ### Nested Configuration Maps:  
 
 #### attribute
@@ -94,6 +103,27 @@ Refer [Configuration Examples](https://github.com/arjstack/terraform-aws-example
 | <a name="region_name"></a> [region_name](#input\_region\_name) | Region name of the replica. | `string` |  | yes |
 | <a name="point_in_time_recovery"></a> [point_in_time_recovery](#input\_point\_in\_time\_recovery) | Flag to decide if Point in time recovery is enabled. | `bool` | `false` | no |
 | <a name="kms_key_arn"></a> [kms_key_arn](#input\_kms\_key\_arn) | ARN of the CMK that should be used for the AWS KMS encryption. | `string` | `null` | no |
+
+#### capacity_autoscaling
+
+| Name | Description | Type | Default | Required |
+|:------|:------|:------|:------|:------:|
+| <a name="max_capacity"></a> [max_capacity](#input\_max\_capacity) | Number of maximum read units for this table. | `number` |  | yes |
+| <a name="scale_in_cooldown"></a> [scale_in_cooldown](#input\_scale\_in\_cooldown) | Cooldown value for Scale-in event. | `number` |  | no |
+| <a name="scale_out_cooldown"></a> [scale_out_cooldown](#input\_scale\_out\_cooldown) | Cooldown value for Scale-out event. | `number` | `50` | no |
+| <a name="target_utilization"></a> [target_utilization](#input\_target\_utilization) | Target utilization. | `number` |  | no |
+
+#### gsi_capacity_autoscaling
+
+| Name | Description | Type | Default | Required |
+|:------|:------|:------|:------|:------:|
+| <a name="min_read_capacity"></a> [max_read_capacity](#input\_max\_read\_capacity) | Number of maximum read units for the Global Secondary Index. | `number` |  | yes |
+| <a name="max_read_capacity"></a> [max_read_capacity](#input\_max\_read\_capacity) | Number of maximum read units for the Global Secondary Index. | `number` |  | yes |
+| <a name="min_write_capacity"></a> [max_write_capacity](#input\_max\_write\_capacity) | Number of maximum write units for the Global Secondary Index. | `number` |  | yes |
+| <a name="max_write_capacity"></a> [max_write_capacity](#input\_max\_write\_capacity) | Number of maximum write units for the Global Secondary Index. | `number` |  | yes |
+| <a name="scale_in_cooldown"></a> [scale_in_cooldown](#input\_scale\_in\_cooldown) | Cooldown value for Scale-in event. | `number` |  | no |
+| <a name="scale_out_cooldown"></a> [scale_out_cooldown](#input\_scale\_out\_cooldown) | Cooldown value for Scale-out event. | `number` | `50` | no |
+| <a name="target_utilization"></a> [target_utilization](#input\_target\_utilization) | Target utilization. | `number` |  | no |
 
 ### Outputs
 

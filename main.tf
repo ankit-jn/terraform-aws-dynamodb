@@ -1,3 +1,4 @@
+## Provisioning of DynamoDB Table
 resource aws_dynamodb_table "this" {
 
     name = var.name
@@ -103,6 +104,7 @@ resource aws_dynamodb_table "this" {
     }
 }   
 
+## Contributor Insights for DynamoDB
 resource aws_dynamodb_contributor_insights "this" {
     count = var.provision_contributor_insights ? 1 : 0
     
@@ -113,11 +115,64 @@ resource aws_dynamodb_contributor_insights "this" {
     ]
 }
 
+## Kinesis Streaming Destination
 resource aws_dynamodb_kinesis_streaming_destination "this" {
     count = var.enable_kinesis_streaming_destination ? 1 : 0
 
     table_name = var.name
     stream_arn = var.kinesis_stream_arn
+
+    depends_on = [
+        aws_dynamodb_table.this
+    ]
+}
+
+## Autoscaling for DynamoDB Table
+module "table_scaling" {
+    source = "./scaling"
+
+    count = ((var.billing_mode == "PROVISIONED") && var.enable_autoscaling) ? 1 : 0
+
+    target_resource_id = "table/${aws_dynamodb_table.this.name}"
+    
+    autoscale_read_capacity = can(var.read_capacity_autoscaling.max_capacity)
+    read_capacity = var.read_capacity
+    read_capacity_autoscaling = var.read_capacity_autoscaling
+
+    autoscale_write_capacity = can(var.write_capacity_autoscaling.max_capacity)
+    write_capacity = var.write_capacity
+    write_capacity_autoscaling = var.write_capacity_autoscaling
+
+    depends_on = [
+        aws_dynamodb_table.this
+    ]
+}
+
+## Autoscaling for Global Secondary Index
+module "gsi_scaling" {
+    source = "./scaling"
+
+    for_each = ((var.billing_mode == "PROVISIONED") && var.enable_autoscaling
+                    && (length(keys(var.gsi_capacity_autoscaling)) > 0)) ? var.gsi_capacity_autoscaling : {}
+
+    target_resource_id = "table/${aws_dynamodb_table.this.name}/index/${each.key}"
+    
+    autoscale_read_capacity = can(each.value.min_read_capacity) && can(each.value.max_read_capacity)
+    read_capacity = each.value.min_read_capacity
+    read_capacity_autoscaling =  {
+                                    max_capacity = each.value.max_read_capacity
+                                    scale_in_cooldown  = lookup(each.value, "scale_in_cooldown", 50)
+                                    scale_out_cooldown = lookup(each.value, "scale_out_cooldown", 50)
+                                    target_value       = lookup(each.value, "target_utilization", 70)
+                                    }
+    autoscale_write_capacity = can(each.value.min_write_capacity) && can(each.value.max_write_capacity)
+    write_capacity = each.value.min_write_capacity
+    write_capacity_autoscaling = {
+                                    max_capacity = each.value.max_write_capacity
+                                    scale_in_cooldown  = lookup(each.value, "scale_in_cooldown", 50)
+                                    scale_out_cooldown = lookup(each.value, "scale_out_cooldown", 50)
+                                    target_value       = lookup(each.value, "target_utilization", 70)
+                                    }
 
     depends_on = [
         aws_dynamodb_table.this
