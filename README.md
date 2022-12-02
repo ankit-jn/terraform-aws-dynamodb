@@ -8,6 +8,8 @@ This module features the following components to be provisioned with different c
 - DynamoDB Table [[aws_dynamodb_table](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table)]
 - Contributor Insights [[aws_dynamodb_contributor_insights](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_contributor_insights)]
 - Kinesis Streaming Destination [[aws_dynamodb_kinesis_streaming_destination](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_kinesis_streaming_destination)]
+- Scaling Target for Table/GSI - Read/Write Capacity [[aws_appautoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target)]
+- Target Tracking Scaling Policy [[aws_appautoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy)]
 
 ### Requirements
 
