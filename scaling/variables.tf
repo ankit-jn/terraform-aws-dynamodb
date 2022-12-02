@@ -1,3 +1,13 @@
+variable "target_type" {
+    description = "The Target Type."
+    type        = string
+    
+    validation {
+        condition = contains(["TABLE", "GSI"], var.target_type)
+        error_message = "Possible Values for `target_type` are `TABLE` and `GSI`."
+    }
+}
+
 variable "target_resource_id"{
     description = "The Resource ID of the Autoscaling Target"
     type        = string

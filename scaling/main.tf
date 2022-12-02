@@ -4,7 +4,7 @@ resource aws_appautoscaling_target "read" {
     max_capacity       = var.read_capacity_autoscaling.max_capacity
     min_capacity       = var.read_capacity
     resource_id        = var.target_resource_id
-    scalable_dimension = "dynamodb:table:ReadCapacityUnits"
+    scalable_dimension = var.target_type == "TABLE" ? "dynamodb:table:ReadCapacityUnits" : "dynamodb:index:ReadCapacityUnits"
     service_namespace  = "dynamodb"
 }
 
@@ -34,7 +34,7 @@ resource aws_appautoscaling_target "write" {
     max_capacity       = var.write_capacity_autoscaling.max_capacity
     min_capacity       = var.write_capacity
     resource_id        = var.target_resource_id
-    scalable_dimension = "dynamodb:table:WriteCapacityUnits"
+    scalable_dimension = var.target_type == "TABLE" ? "dynamodb:table:WriteCapacityUnits" : "dynamodb:index:WriteCapacityUnits"
     service_namespace  = "dynamodb"
 }
 

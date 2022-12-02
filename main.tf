@@ -133,6 +133,7 @@ module "table_scaling" {
 
     count = ((var.billing_mode == "PROVISIONED") && var.enable_autoscaling) ? 1 : 0
 
+    target_type = "TABLE"
     target_resource_id = "table/${aws_dynamodb_table.this.name}"
     
     autoscale_read_capacity = can(var.read_capacity_autoscaling.max_capacity)
@@ -155,6 +156,7 @@ module "gsi_scaling" {
     for_each = ((var.billing_mode == "PROVISIONED") && var.enable_autoscaling
                     && (length(keys(var.gsi_capacity_autoscaling)) > 0)) ? var.gsi_capacity_autoscaling : {}
 
+    target_type = "GSI"
     target_resource_id = "table/${aws_dynamodb_table.this.name}/index/${each.key}"
     
     autoscale_read_capacity = can(each.value.min_read_capacity) && can(each.value.max_read_capacity)
